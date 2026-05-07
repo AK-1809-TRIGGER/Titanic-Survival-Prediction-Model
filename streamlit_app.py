@@ -1,4 +1,5 @@
 import streamlit as st
+import os
 import requests
 
 # ── Page config ──────────────────────────────────────────────────────────────
@@ -14,7 +15,7 @@ st.markdown("**Would you have survived the Titanic?** Fill in the details below 
 st.divider()
 
 # ── FastAPI endpoint ──────────────────────────────────────────────────────────
-API_URL = "http://localhost:8000/predict"  # change if deployed separately
+API_URL = os.environ.get("API_URL", "http://localhost:8000/predict")  # change if deployed separately
 
 # ── Input form ────────────────────────────────────────────────────────────────
 col1, col2 = st.columns(2)
@@ -47,7 +48,7 @@ if st.button("🔮 Predict My Survival", use_container_width=True, type="primary
     payload = {"pclass": pclass, "sex": sex, "age": float(age), "fare": float(fare)}
 
     try:
-        response = requests.post(API_URL, json=payload, timeout=5)
+        response = requests.post(API_URL, json=payload, timeout=10)
         response.raise_for_status()
         result = response.json()
 
