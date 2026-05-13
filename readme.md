@@ -1,90 +1,130 @@
-# Titanic Survival Prediction
+# 🚢 Titanic Survival Prediction
 
-This was one of my first end-to-end ML projects. I wanted to go beyond just training a model in a notebook — so I built a FastAPI backend and a Streamlit UI on top of it.
+> My first end-to-end Machine Learning project — from raw data exploration to a deployed Streamlit app, containerized with Docker.
 
-Accuracy is 77%, which I know isn't state of the art, but for a logistic regression with basic feature engineering I think it's a solid starting point.
-
----
-
-## What it does
-
-You enter a passenger's details (class, age, gender, fare) and the app predicts whether they would have survived the Titanic.
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Streamlit-FF4B4B?style=for-the-badge&logo=streamlit)](https://titanic-survival-prediction-model-2bjpwmpxsdntkeek9bjalj.streamlit.app/)
+[![Docker Hub](https://img.shields.io/badge/Docker%20Hub-Pull%20Image-2496ED?style=for-the-badge&logo=docker)](https://hub.docker.com/r/abhishek1255/titanic-survival)
+[![GitHub](https://img.shields.io/badge/GitHub-Source-181717?style=for-the-badge&logo=github)](https://github.com/AK-1809-TRIGGER/Titanic-Survival-Prediction-Model)
+<img width="512" height="512" alt="image" src="https://github.com/user-attachments/assets/5819bad3-75ec-49f1-9470-4f2390c793c5" />
 
 ---
 
-## How I built it
+## 🎯 What It Does
 
-Started with EDA to understand the data. A few things stood out immediately:
+Enter a passenger's details — class, age, gender, fare — and the model predicts whether they would have survived the Titanic disaster.
 
-- Female passengers survived at a much higher rate than male (~74% vs ~19%)
-- 1st class passengers had a significantly better chance than 3rd class
-- Children had higher survival rates too
+**Model Accuracy: 77%** using Logistic Regression with custom feature engineering.
 
-Based on those insights I created two extra features:
-- `IsChild` — whether the passenger was under 16
-- `Priority` — female OR child (basically who got lifeboat priority)
-
-These two features ended up being pretty useful for the model.
-
-After cleaning the data and encoding categoricals, I trained a Logistic Regression model, scaled the features with StandardScaler, and got to 77% accuracy on the test set.
+🔗 **[Try the live app here](https://titanic-survival-prediction-model-2bjpwmpxsdntkeek9bjalj.streamlit.app/)**
 
 ---
 
-## Tech stack
+## 🔍 Key Insights from EDA
 
-- Python, Pandas, NumPy
-- Scikit-learn (Logistic Regression, StandardScaler)
-- Seaborn + Matplotlib for EDA
-- FastAPI for the prediction API
-- Streamlit for the frontend
-- Joblib to save/load the model
+| Finding | Survival Rate |
+|---------|--------------|
+| Female passengers | ~74% |
+| Male passengers | ~19% |
+| 1st class vs 3rd class | Significantly higher |
+| Children (under 16) | Higher than average |
+
+These patterns reflect the real "women and children first" lifeboat protocol — and they directly shaped my feature engineering decisions.
 
 ---
 
-## Project structure
+## ⚙️ Feature Engineering
+
+Two custom features built from EDA insights:
+
+- **`IsChild`** — `True` if passenger age < 16
+- **`Priority`** — `True` if passenger was female OR a child (mirrors actual lifeboat boarding priority)
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Tools |
+|-------|-------|
+| Data & ML | Python, Pandas, NumPy, Scikit-learn |
+| Model | Logistic Regression + StandardScaler |
+| Visualization | Seaborn, Matplotlib |
+| Frontend | Streamlit |
+| Serialization | Joblib |
+| Containerization | Docker |
+
+---
+
+## 📁 Project Structure
 
 ```
-titanic-project/
-├── train.csv
-├── titanic.py          # EDA + analysis notebook (converted to script)
-├── train_model.py      # cleans data, trains model, saves model.pkl
-├── model.pkl           # saved model (generated after running train_model.py)
-├── scaler.pkl          # saved scaler
-├── app.py              # FastAPI backend
-├── streamlit_app.py    # Streamlit frontend
-└── requirements.txt
+Titanic-Survival-Prediction-Model/
+├── train.csv               # Kaggle training dataset
+├── titanic.py              # Trains model → saves model.pkl + scaler.pkl
+├── titanic.ipynb           # EDA notebook
+├── streamlit_app.py        # Streamlit UI (self-contained, no API needed)
+├── model.pkl               # Saved trained model
+├── scaler.pkl              # Saved StandardScaler
+├── requirements.txt        # Python dependencies
+└── Dockerfile              # For Docker deployment
 ```
 
 ---
 
-## Running locally
+## 🚀 Run with Docker
 
 ```bash
+# Pull the pre-built image
+docker pull abhishek1255/titanic-survival:latest
+
+# Run the app
+docker run -p 8501:8501 abhishek1255/titanic-survival:latest
+```
+
+Open `http://localhost:8501` in your browser.
+
+---
+
+## 💻 Run Locally
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/AK-1809-TRIGGER/Titanic-Survival-Prediction-Model.git
+cd Titanic-Survival-Prediction-Model
+
+# 2. Install dependencies
 pip install -r requirements.txt
 
-# Step 1 — train and save the model
-python train_model.py
+# 3. Train and save the model
+python titanic.py
 
-# Step 2 — start the API (Terminal 1)
-uvicorn app:main --reload
-
-# Step 3 — start the UI (Terminal 2)
+# 4. Launch the app
 streamlit run streamlit_app.py
 ```
 
-Then open `http://localhost:8501` in your browser.
+---
+
+## 🔮 What I'd Improve Next
+
+- [ ] Try Random Forest or XGBoost and compare accuracy
+- [ ] Add family size feature: `FamilySize = SibSp + Parch + 1`
+- [ ] Log-transform Fare to handle extreme outliers
+- [ ] Hyperparameter tuning with GridSearchCV
 
 ---
 
-## What I'd improve next
+## 📊 Dataset
 
-- Try Random Forest or XGBoost and compare
-- Add more features like family size (SibSp + Parch)
-- Better handling of the Fare outliers (there are a few extreme values)
-- Deploy on Streamlit Cloud so anyone can use it without setting up locally
+Kaggle Titanic Competition — [Download train.csv](https://www.kaggle.com/competitions/titanic/data)
 
 ---
 
-## Dataset
+## 👤 Author
 
-Kaggle Titanic competition — [train.csv](https://www.kaggle.com/competitions/titanic/data)
+**Abhishek** (AK-1809-TRIGGER)
+Started with Data Analysis → now building ML projects.
+
+[GitHub](https://github.com/AK-1809-TRIGGER) · [Docker Hub](https://hub.docker.com/r/abhishek1255)
+
+---
+
+*If this helped you, leave a ⭐ — it means a lot for a first ML project!*
